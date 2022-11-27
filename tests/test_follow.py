@@ -101,6 +101,7 @@ class TestFollowAPI:
 
         data = {'following': user.username}
         response = user_client.post('/api/v1/follow/', data=data)
+        print(response.json())
         assert response.status_code == 400, (
             'Проверьте, что при POST запросе на `/api/v1/follow/` '
             'при попытке подписаться на самого себя возвращается статус 400'
