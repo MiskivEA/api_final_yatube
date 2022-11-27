@@ -1,11 +1,10 @@
-from rest_framework import viewsets, mixins, permissions, filters
+from api.permissions import IsAuthorOrReadOnly
+from api.serializers import (CommentSerializer, FollowSerializer,
+                             GroupSerializer, PostSerializer)
+from posts.models import Comment, Follow, Group, Post
+from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
-
-from api.permissions import IsAuthorOrReadOnly
-from api.serializers import PostSerializer, CommentSerializer, FollowSerializer, GroupSerializer
-from posts.models import Post, Comment, Follow, Group
-from django_filters.rest_framework import DjangoFilterBackend
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -29,7 +28,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = IsAuthorOrReadOnly,
     pagination_class = None
-    
+
     def get_queryset(self):
         return Comment.objects.filter(post=self.kwargs.get('post_id'))
 
@@ -51,5 +50,3 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-
